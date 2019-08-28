@@ -1,15 +1,14 @@
 
 /* IMPORT */
 
-import {RequireAtLeastOne} from 'type-fest';
-import {ExponentialOptions} from '../types';
+import {PartialOptions, ExponentialOptions} from '../types';
 import Abstract from './abstract';
 
 /* EXPONENTIAL */
 
-class Exponential extends Abstract<ExponentialOptions> {
+class Exponential<Options extends ExponentialOptions, POptions extends PartialOptions<Options>> extends Abstract<Options, POptions> {
 
-  constructor ( options: RequireAtLeastOne<ExponentialOptions, 'fn'> ) {
+  constructor ( options: POptions ) {
 
     super ( options );
 

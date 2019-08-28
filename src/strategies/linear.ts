@@ -1,15 +1,14 @@
 
 /* IMPORT */
 
-import {RequireAtLeastOne} from 'type-fest';
-import {LinearOptions} from '../types';
+import {PartialOptions, LinearOptions} from '../types';
 import Abstract from './abstract';
 
 /* LINEAR */
 
-class Linear extends Abstract<LinearOptions> {
+class Linear<Options extends LinearOptions, POptions extends PartialOptions<Options>> extends Abstract<Options, POptions> {
 
-  constructor ( options: RequireAtLeastOne<LinearOptions, 'fn'> ) {
+  constructor ( options: POptions ) {
 
     super ( options );
 

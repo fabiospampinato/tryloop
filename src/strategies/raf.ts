@@ -1,12 +1,12 @@
 
 /* IMPORT */
 
-import {RAFOptions} from '../types';
+import {PartialOptions, RAFOptions} from '../types';
 import Abstract from './abstract';
 
 /* REQUEST ANIMATION FRAME */
 
-class RAF extends Abstract<RAFOptions> {
+class RAF<Options extends RAFOptions, POptions extends PartialOptions<Options>> extends Abstract<Options, POptions> {
 
   schedule ( fn: Function ): void {
 

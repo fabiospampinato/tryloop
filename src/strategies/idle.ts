@@ -1,14 +1,14 @@
 
 /* IMPORT */
 
-import {IdleOptions} from '../types';
+import {PartialOptions, IdleOptions} from '../types';
 import Abstract from './abstract';
 
 /* IDLE */
 
 declare const requestIdleCallback: Function; //TSC
 
-class Idle extends Abstract<IdleOptions> {
+class Idle<Options extends IdleOptions, POptions extends PartialOptions<Options>> extends Abstract<Options, POptions> {
 
   schedule ( fn: Function ): void {
 

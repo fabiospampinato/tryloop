@@ -12,7 +12,6 @@ describe ( 'Abstract', it => {
   it.beforeEach ( t => {
 
     t.context.tl = tryloop.linear ({
-      fallback: 321,
       fn: async () => {
         await delay ( 1000 );
         return 123;
@@ -36,6 +35,15 @@ describe ( 'Abstract', it => {
 
     });
 
+    it ( 'support getting passed a function', async t => {
+
+      const tl = tryloop.linear ( () => 123 ),
+            value = tl.start ();
+
+      t.is ( await value, 123 );
+
+    });
+
   });
 
   describe ( 'start', it => {
@@ -51,46 +59,46 @@ describe ( 'Abstract', it => {
 
     });
 
-    it ( 'falls back after the timeout', async t => {
+    it ( 'returns undefined after the timeout', async t => {
 
       t.context.tl.options.timeout = 100;
 
       const result = t.context.tl.start ();
 
-      t.is ( await result, 321 );
+      t.is ( await result, undefined );
 
     });
 
-    it ( 'falls back after enough retries', async t => {
+    it ( 'returns undefined after enough retries', async t => {
 
       t.context.tl.options.tries = 0;
 
       const result = t.context.tl.start ();
 
-      t.is ( await result, 321 );
+      t.is ( await result, undefined );
 
     });
 
-    it.only ( 'retries if fn returns undefined', async t => {
+    it ( 'retries if fn returns undefined', async t => {
 
       t.context.tl.options.fn = () => {};
       t.context.tl.options.tries = 10;
 
       const result = t.context.tl.start ();
 
-      t.is ( await result, 321 );
+      t.is ( await result, undefined );
       t.is ( t.context.tl.tries, 10 );
 
     });
 
-    it.only ( 'retries if fn returns a promise which resolves to undefined', async t => {
+    it ( 'retries if fn returns a promise which resolves to undefined', async t => {
 
       t.context.tl.options.fn = () => Promise.resolve ();
       t.context.tl.options.tries = 10;
 
       const result = t.context.tl.start ();
 
-      t.is ( await result, 321 );
+      t.is ( await result, undefined );
       t.is ( t.context.tl.tries, 10 );
 
     });

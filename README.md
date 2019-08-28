@@ -15,7 +15,7 @@ You'll have to provide the `options.fn` function, which will be the operation to
 - If the function throws, TryLoop will throw.
 - If the function returns `undefined`, or a `Promise` which resolves to `undefined`, the operation will be retried.
 - If the function returns any other value, or a `Promise` which resolves to any other value, TryLoop will return a `Promise` to that value.
-- If the function can't be retried any longer, e.g. maybe the timeout run out or we hit the max retries limit, TryLoop will return the `options.fallback` value.
+- If the function can't be retried any longer, e.g. maybe the timeout run out or we hit the max retries limit, TryLoop will return `undefined`.
 
 There are multiple backoff/retry strategies implemented, each with its own particular retry logic.
 
@@ -46,9 +46,8 @@ These are the accepted options:
 ```ts
 type Options = {
   fn: () => any, // Operation to retry
-  fallback: any, // Fallback value
-  timeout: number, // Return the fallback value after this timeout
-  tries: number, // Return the fallback value after this number of tries
+  timeout: number, // Return undefined after this timeout
+  tries: number, // Return undefined after this number of tries
   interval: number // Fixed interval between retries
 };
 ```
@@ -60,7 +59,6 @@ import tryloop from 'tryloop';
 
 const instance = tryloop.linear ({
   fn: () => {}, // Operation to retry
-  fallback: 123, // Fallback value
   timeout: 10000, // Time out after 10s
   tries: 100, // Not more than 100 tries
   interval: 100 // Wait 100ms between retries
@@ -78,9 +76,8 @@ These are the accepted options:
 ```ts
 type Options = {
   fn: () => any, // Operation to retry
-  fallback: any, // Fallback value
-  timeout: number, // Return the fallback value after this timeout
-  tries: number // Return the fallback value after this number of tries
+  timeout: number, // Return undefined after this timeout
+  tries: number // Return undefined after this number of tries
 };
 ```
 
@@ -91,7 +88,6 @@ import tryloop from 'tryloop';
 
 const instance = tryloop.idle ({
   fn: () => {}, // Operation to retry
-  fallback: 123, // Fallback value
   timeout: 10000, // Time out after 10s
   tries: 100 // Not more than 100 tries
 });
@@ -108,9 +104,8 @@ These are the accepted options:
 ```ts
 type Options = {
   fn: () => any, // Operation to retry
-  fallback: any, // Fallback value
-  timeout: number, // Return the fallback value after this timeout
-  tries: number, // Return the fallback value after this number of tries
+  timeout: number, // Return undefined after this timeout
+  tries: number, // Return undefined after this number of tries
   factor: number, // Base factor which will be exponentiated after each try
   minInterval: number, // Minimum interval between retries, also starting interval
   maxInterval: number // Maximum interval between retries
@@ -124,7 +119,6 @@ import tryloop from 'tryloop';
 
 const instance = tryloop.exponential ({
   fn: () => {}, // Operation to retry
-  fallback: 123, // Fallback value
   timeout: 10000, // Time out after 10s
   tries: 100, // Not more than 100 tries
   factor: 2, // Base factor
@@ -144,9 +138,8 @@ These are the accepted options:
 ```ts
 type Options = {
   fn: () => any, // Operation to retry
-  fallback: any, // Fallback value
-  timeout: number, // Return the fallback value after this timeout
-  tries: number // Return the fallback value after this number of tries
+  timeout: number, // Return undefined after this timeout
+  tries: number // Return undefined after this number of tries
 };
 ```
 
@@ -157,7 +150,6 @@ import tryloop from 'tryloop';
 
 const instance = tryloop.raf ({
   fn: () => {}, // Operation to retry
-  fallback: 123, // Fallback value
   timeout: 10000, // Time out after 10s
   tries: 100 // Not more than 100 tries
 });

@@ -1,26 +1,24 @@
 
 /* IMPORT */
 
-import {Result, AbstractOptions} from '../types';
-import {RequireAtLeastOne} from 'type-fest';
+import {Result, PartialOptions, AbstractOptions} from '../types';
 import resolveTimeout from 'promise-resolve-timeout';
 
 /* ABSTRACT */
 
-abstract class Abstract<Options extends AbstractOptions> {
+abstract class Abstract<Options extends AbstractOptions, POptions extends PartialOptions<Options>> {
 
   options: Options;
 
-  protected result: Result<Options>;
+  protected result: Promise<Result<POptions>>;
   protected running: boolean = false;
   protected startTime: number = NaN;
   protected stopTime: number = NaN;
   protected tries: number = 0;
 
-  constructor ( options: RequireAtLeastOne<Options, 'fn'> ) {
+  constructor ( options: POptions ) {
 
     this.options = Object.assign ({
-      fallback: undefined,
       timeout: Infinity,
       tries: Infinity
     }, options ) as any; //TSC: not sure what to do about the supposed error
@@ -29,7 +27,7 @@ abstract class Abstract<Options extends AbstractOptions> {
 
   }
 
-  start (): Result<Options> {
+  start (): Promise<Result<POptions>> {
 
     if ( this.running ) return this.result;
 
@@ -57,14 +55,14 @@ abstract class Abstract<Options extends AbstractOptions> {
 
   }
 
-  loop (): Result<Options> {
+  loop (): Promise<Result<POptions>> {
 
     return Promise.race ([
       resolveTimeout ( this.options.timeout, () => {
         this.stop ();
-        return this.options.fallback;
+        return undefined;
       }),
-      new Promise ( res => {
+      new Promise<Result<POptions>> ( res => {
         const resolve = value => {
           this.stop ();
           res ( value );
@@ -79,11 +77,11 @@ abstract class Abstract<Options extends AbstractOptions> {
 
   try ( resolve: Function, retry: Function ): void {
 
-    if ( !this.running ) return resolve ( this.options.fallback );
+    if ( !this.running ) return resolve ();
 
-    if ( ( Date.now () - this.startTime ) >= this.options.timeout ) return resolve ( this.options.fallback );
+    if ( ( Date.now () - this.startTime ) >= this.options.timeout ) return resolve ();
 
-    if ( this.tries >= this.options.tries ) return resolve ( this.options.fallback );
+    if ( this.tries >= this.options.tries ) return resolve ();
 
     this.tries++;
 
@@ -95,6 +93,7 @@ abstract class Abstract<Options extends AbstractOptions> {
       result.then ( onResult );
 
     } else {
+
       onResult ( result );
 
     }

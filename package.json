@@ -43,8 +43,7 @@
     "raf"
   ],
   "dependencies": {
-    "promise-resolve-timeout": "^1.1.0",
-    "type-fest": "^0.7.1"
+    "promise-resolve-timeout": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^12.7.2",
