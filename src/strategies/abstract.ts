@@ -2,7 +2,6 @@
 /* IMPORT */
 
 import {Result, PartialOptions, AbstractOptions} from '../types';
-import resolveTimeout from 'promise-resolve-timeout';
 
 /* ABSTRACT */
 
@@ -58,9 +57,12 @@ abstract class Abstract<Options extends AbstractOptions, POptions extends Partia
   loop (): Promise<Result<POptions>> {
 
     return Promise.race ([
-      resolveTimeout ( this.options.timeout, () => {
-        this.stop ();
-        return undefined;
+      new Promise<undefined> ( resolve => {
+        if ( this.options.timeout === Infinity ) return;
+        setTimeout ( () => {
+          this.stop ();
+          resolve ( undefined );
+        }, this.options.timeout );
       }),
       new Promise<Result<POptions>> ( res => {
         const resolve = value => {
