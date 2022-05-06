@@ -1,12 +1,14 @@
 
 /* IMPORT */
 
-import {PartialOptions, ExponentialOptions} from '../types';
 import Abstract from './abstract';
+import type {PartialOptions, ExponentialOptions} from '../types';
 
-/* EXPONENTIAL */
+/* MAIN */
 
 class Exponential<Options extends ExponentialOptions, POptions extends PartialOptions<Options>> extends Abstract<Options, POptions> {
+
+  /* CONSTRUCTOR */
 
   constructor ( options: POptions ) {
 
@@ -19,6 +21,8 @@ class Exponential<Options extends ExponentialOptions, POptions extends PartialOp
     }, this.options );
 
   }
+
+  /* API */
 
   schedule ( fn: Function ): void {
 

@@ -1,19 +1,23 @@
 
 /* IMPORT */
 
-import {Result, PartialOptions, AbstractOptions} from '../types';
+import {isPromise, isUndefined} from '../utils';
+import type {Result, PartialOptions, AbstractOptions} from '../types';
 
-/* ABSTRACT */
+/* MAIN */
 
-abstract class Abstract<Options extends AbstractOptions, POptions extends PartialOptions<Options>> {
+class Abstract<Options extends AbstractOptions, POptions extends PartialOptions<Options>> {
 
-  options: Options;
+  /* VARIABLES */
 
+  protected options: Options;
   protected result: Promise<Result<POptions>>;
   protected running: boolean = false;
   protected startTime: number = NaN;
   protected stopTime: number = NaN;
   protected tries: number = 0;
+
+  /* CONSTRUCTOR */
 
   constructor ( options: POptions ) {
 
@@ -25,6 +29,8 @@ abstract class Abstract<Options extends AbstractOptions, POptions extends Partia
     this.options.timeout = Math.min ( 2147483647, this.options.timeout );
 
   }
+
+  /* API */
 
   start (): Promise<Result<POptions>> {
 
@@ -56,16 +62,19 @@ abstract class Abstract<Options extends AbstractOptions, POptions extends Partia
 
   loop (): Promise<Result<POptions>> {
 
+    let timeoutId: number | undefined;
+
     return Promise.race ([
       new Promise<undefined> ( resolve => {
         if ( this.options.timeout === Infinity ) return;
-        setTimeout ( () => {
+        timeoutId = setTimeout ( () => {
           this.stop ();
           resolve ( undefined );
         }, this.options.timeout );
       }),
       new Promise<Result<POptions>> ( res => {
         const resolve = value => {
+          clearTimeout ( timeoutId );
           this.stop ();
           res ( value );
         };
@@ -87,10 +96,10 @@ abstract class Abstract<Options extends AbstractOptions, POptions extends Partia
 
     this.tries++;
 
-    const onResult = result => ( typeof result === 'undefined' ) ? retry () : resolve ( result ),
-          result = this.options.fn ();
+    const onResult = result => isUndefined ( result ) ? retry () : resolve ( result );
+    const result = this.options.fn ();
 
-    if ( result instanceof Promise ) {
+    if ( isPromise ( result ) ) {
 
       result.then ( onResult );
 
@@ -102,7 +111,11 @@ abstract class Abstract<Options extends AbstractOptions, POptions extends Partia
 
   }
 
-  abstract schedule ( fn: Function ): void;
+  schedule ( _: Function ): void {
+
+    throw new Error ( 'Missing schedule function' );
+
+  }
 
 }
 

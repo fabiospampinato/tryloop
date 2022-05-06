@@ -1,22 +1,36 @@
 
 /* IMPORT */
 
-import {FN, PartialOptions, AbstractOptions} from './types';
+import type {FN, PartialOptions, AbstractOptions} from './types';
 
-/* UTILS */
+/* MAIN */
 
-const Utils = {
+const isFunction = ( value: unknown ): value is Function => {
 
-  makeOptions<T extends PartialOptions<AbstractOptions>> ( options: FN | T ): T | { fn: FN } {
+  return typeof value === 'function';
 
-    if ( typeof options === 'function' ) return { fn: options };
+};
 
-    return options;
+const isPromise = <T = unknown> ( value: unknown ): value is Promise<T> => {
 
-  }
+  return value instanceof Promise;
+
+};
+
+const isUndefined = ( value: unknown ): value is undefined => {
+
+  return typeof value === 'undefined';
+
+};
+
+const makeOptions = <T extends PartialOptions<AbstractOptions>> ( options: FN | T ): T | { fn: FN } => {
+
+  if ( isFunction ( options ) ) return { fn: options };
+
+  return options;
 
 };
 
 /* EXPORT */
 
-export default Utils;
+export {isFunction, isPromise, isUndefined, makeOptions};

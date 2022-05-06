@@ -1,12 +1,14 @@
 
 /* IMPORT */
 
-import {PartialOptions, LinearOptions} from '../types';
 import Abstract from './abstract';
+import type {PartialOptions, LinearOptions} from '../types';
 
-/* LINEAR */
+/* MAIN */
 
 class Linear<Options extends LinearOptions, POptions extends PartialOptions<Options>> extends Abstract<Options, POptions> {
+
+  /* CONSTRUCTOR */
 
   constructor ( options: POptions ) {
 
@@ -17,6 +19,8 @@ class Linear<Options extends LinearOptions, POptions extends PartialOptions<Opti
     }, this.options );
 
   }
+
+  /* API */
 
   schedule ( fn: Function ): void {
 

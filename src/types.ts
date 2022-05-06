@@ -7,9 +7,9 @@ type PartialExcept<Object, Keys extends keyof Object> = Partial<Object> & {
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 
-/* TYPES */
+/* MAIN */
 
-type FN = () => any;
+type FN = () => unknown;
 
 type Result<Options extends PartialOptions<AbstractOptions>> = UnwrapPromise<ReturnType<Options['fn']> | undefined>;
 
@@ -39,4 +39,4 @@ type RAFOptions = AbstractOptions;
 
 /* EXPORT */
 
-export {FN, Result, PartialOptions, InferPartialOptions, AbstractOptions, ExponentialOptions, IdleOptions, LinearOptions, RAFOptions};
+export type {FN, Result, PartialOptions, InferPartialOptions, AbstractOptions, ExponentialOptions, IdleOptions, LinearOptions, RAFOptions};

@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import {describe} from 'ava-spec';
-import {default as tryloop} from '../dist';
+import {describe} from 'fava';
+import tryloop from '../dist/index.js';
 
-/* LINEAR */
+/* MAIN */
 
 describe ( 'Linear', it => {
 

@@ -1,44 +1,48 @@
 
 /* IMPORT */
 
-import {describe} from 'ava-spec';
-import delay from 'promise-resolve-timeout';
-import {default as tryloop} from '../dist';
+import {describe} from 'fava';
+import {setTimeout as delay} from 'node:timers/promises';
+import tryloop from '../dist/index.js';
 
-/* ABSTRACT */
+/* HELPERS */
 
-describe ( 'Abstract', it => {
-
-  it.beforeEach ( t => {
-
-    t.context.tl = tryloop.linear ({
-      fn: async () => {
-        await delay ( 1000 );
-        return 123;
-      }
-    });
-
+const makeTryloop = () => {
+  return tryloop.linear ({
+    fn: async () => {
+      await delay ( 1000 );
+      return 123;
+    }
   });
+};
+
+/* MAIN */
+
+describe ( 'Abstract', () => {
 
   describe ( 'constructor', it => {
 
     it ( 'initializes the options', t => {
 
-      t.is ( t.context.tl.options.tries, Infinity );
+      const tl = makeTryloop ();
+
+      t.is ( tl.options.tries, Infinity );
 
     });
 
     it ( 'initializes the state', t => {
 
-      t.is ( t.context.tl.running, false );
-      t.is ( t.context.tl.tries, 0 );
+      const tl = makeTryloop ();
+
+      t.is ( tl.running, false );
+      t.is ( tl.tries, 0 );
 
     });
 
     it ( 'support getting passed a function', async t => {
 
-      const tl = tryloop.linear ( () => 123 ),
-            value = tl.start ();
+      const tl = tryloop.linear ( () => 123 );
+      const value = tl.start ();
 
       t.is ( await value, 123 );
 
@@ -50,20 +54,23 @@ describe ( 'Abstract', it => {
 
     it ( 'starts the loop', async t => {
 
-      const result = t.context.tl.start ();
+      const tl = makeTryloop ();
+      const result = tl.start ();
 
-      t.is ( t.context.tl.running, true );
-      t.is ( t.context.tl.tries, 1 );
+      t.is ( tl.running, true );
+      t.is ( tl.tries, 1 );
       t.is ( await result, 123 );
-      t.is ( t.context.tl.running, false );
+      t.is ( tl.running, false );
 
     });
 
     it ( 'returns undefined after the timeout', async t => {
 
-      t.context.tl.options.timeout = 100;
+      const tl = makeTryloop ();
 
-      const result = t.context.tl.start ();
+      tl.options.timeout = 100;
+
+      const result = tl.start ();
 
       t.is ( await result, undefined );
 
@@ -71,9 +78,11 @@ describe ( 'Abstract', it => {
 
     it ( 'returns undefined after enough retries', async t => {
 
-      t.context.tl.options.tries = 0;
+      const tl = makeTryloop ();
 
-      const result = t.context.tl.start ();
+      tl.options.tries = 0;
+
+      const result = tl.start ();
 
       t.is ( await result, undefined );
 
@@ -81,25 +90,29 @@ describe ( 'Abstract', it => {
 
     it ( 'retries if fn returns undefined', async t => {
 
-      t.context.tl.options.fn = () => {};
-      t.context.tl.options.tries = 10;
+      const tl = makeTryloop ();
 
-      const result = t.context.tl.start ();
+      tl.options.fn = () => {};
+      tl.options.tries = 10;
+
+      const result = tl.start ();
 
       t.is ( await result, undefined );
-      t.is ( t.context.tl.tries, 10 );
+      t.is ( tl.tries, 10 );
 
     });
 
     it ( 'retries if fn returns a promise which resolves to undefined', async t => {
 
-      t.context.tl.options.fn = () => Promise.resolve ();
-      t.context.tl.options.tries = 10;
+      const tl = makeTryloop ();
 
-      const result = t.context.tl.start ();
+      tl.options.fn = () => Promise.resolve ();
+      tl.options.tries = 10;
+
+      const result = tl.start ();
 
       t.is ( await result, undefined );
-      t.is ( t.context.tl.tries, 10 );
+      t.is ( tl.tries, 10 );
 
     });
 
@@ -109,11 +122,12 @@ describe ( 'Abstract', it => {
 
     it ( 'stops the loop', async t => {
 
-      const result = t.context.tl.start ();
+      const tl = makeTryloop ();
+      const result = tl.start ();
 
-      t.context.tl.stop ();
+      tl.stop ();
 
-      t.is ( t.context.tl.running, false );
+      t.is ( tl.running, false );
       t.is ( await result, 123 );
 
     });
