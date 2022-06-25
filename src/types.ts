@@ -5,13 +5,11 @@ type PartialExcept<Object, Keys extends keyof Object> = Partial<Object> & {
   [Key in Keys]: Required<Pick<Object, Key>>[Key]
 };
 
-type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
-
 /* MAIN */
 
 type FN = () => unknown;
 
-type Result<Options extends PartialOptions<AbstractOptions>> = UnwrapPromise<ReturnType<Options['fn']> | undefined>;
+type Result<Options extends PartialOptions<AbstractOptions>> = Awaited<ReturnType<Options['fn']> | undefined>;
 
 type PartialOptions<Options extends AbstractOptions> = PartialExcept<Options, 'fn'>;
 
