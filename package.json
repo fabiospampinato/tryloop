@@ -2,7 +2,7 @@
   "name": "tryloop",
   "repository": "github:fabiospampinato/tryloop",
   "description": "Simple library for retrying operations, it supports multiple backoff strategies.",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "type": "module",
   "main": "dist/index.js",
   "exports": "./dist/index.js",
