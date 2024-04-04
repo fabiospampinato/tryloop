@@ -40,3 +40,4 @@ const tryloop = {
 /* EXPORT */
 
 export default tryloop;
+export type {ExponentialOptions, IdleOptions, LinearOptions, RAFOptions};
