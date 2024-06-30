@@ -1,8 +1,7 @@
 
 /* IMPORT */
 
-import {describe} from 'fava';
-import {setTimeout as delay} from 'node:timers/promises';
+import {describe, t} from 'fava';
 import tryloop from '../dist/index.js';
 
 /* HELPERS */
@@ -10,7 +9,7 @@ import tryloop from '../dist/index.js';
 const makeTryloop = () => {
   return tryloop.linear ({
     fn: async () => {
-      await delay ( 1000 );
+      await t.wait ( 1000 );
       return 123;
     }
   });
