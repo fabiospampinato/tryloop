@@ -21,7 +21,8 @@
     "backoff",
     "linear",
     "exponential",
-    "raf"
+    "raf",
+    "random"
   ],
   "devDependencies": {
     "fava": "^0.2.1",

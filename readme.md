@@ -157,6 +157,38 @@ const instance = tryloop.raf ({
 const value = await instance.start ();
 ```
 
+### Random
+
+The random strategy retries the operation using intervals randomly calculated between the min and the max.
+
+These are the accepted options:
+
+```ts
+type Options = {
+  fn: () => any, // Operation to retry
+  timeout: number, // Return undefined after this timeout
+  tries: number, // Return undefined after this number of tries
+  minInterval: number, // Minimum interval between retries
+  maxInterval: number // Maximum interval between retries
+};
+```
+
+You can use it like so:
+
+```ts
+import tryloop from 'tryloop';
+
+const instance = tryloop.random ({
+  fn: () => {}, // Operation to retry
+  timeout: 10000, // Time out after 10s
+  tries: 100, // Not more than 100 tries
+  minInterval: 1, // Randomly pick an interval >= 1ms
+  maxInterval: 1000 // Randomly pick an interval <= 1ms
+});
+
+const value = await instance.start ();
+```
+
 ## License
 
 MIT © Fabio Spampinato

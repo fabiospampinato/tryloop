@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import {Exponential, Idle, Linear, RAF} from './strategies';
+import {Exponential, Idle, Linear, RAF, Random} from './strategies';
 import {makeOptions} from './utils';
-import type {FN, PartialOptions, InferPartialOptions, ExponentialOptions, IdleOptions, LinearOptions, RAFOptions} from './types';
+import type {FN, PartialOptions, InferPartialOptions, ExponentialOptions, IdleOptions, LinearOptions, RAFOptions, RandomOptions} from './types';
 
 /* MAIN */
 
@@ -33,6 +33,12 @@ const tryloop = {
 
     return new RAF ( makeOptions ( options ) );
 
+  },
+
+  random: <T extends FN | PartialOptions<RandomOptions>> ( options: T ): Random<RandomOptions, InferPartialOptions<T>> => {
+
+    return new Random ( makeOptions ( options ) );
+
   }
 
 };
@@ -40,4 +46,4 @@ const tryloop = {
 /* EXPORT */
 
 export default tryloop;
-export type {ExponentialOptions, IdleOptions, LinearOptions, RAFOptions};
+export type {ExponentialOptions, IdleOptions, LinearOptions, RAFOptions, RandomOptions};

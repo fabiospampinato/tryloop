@@ -35,6 +35,11 @@ type LinearOptions = AbstractOptions & {
 
 type RAFOptions = AbstractOptions;
 
+type RandomOptions = AbstractOptions & {
+  minInterval: number,
+  maxInterval: number
+};
+
 /* EXPORT */
 
-export type {FN, Result, PartialOptions, InferPartialOptions, AbstractOptions, ExponentialOptions, IdleOptions, LinearOptions, RAFOptions};
+export type {FN, Result, PartialOptions, InferPartialOptions, AbstractOptions, ExponentialOptions, IdleOptions, LinearOptions, RAFOptions, RandomOptions};
